@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { shippingPrices, deliveryTimes } from '../data/constants';
 import { createOrder } from '../services/api';
+import axios from 'axios';
 
 const Cart = ({ cart, setCart, setCurrentPage, setLastOrder }) => {
   const [governorate, setGovernorate] = useState('Cairo');
@@ -51,11 +52,27 @@ const Cart = ({ cart, setCart, setCurrentPage, setLastOrder }) => {
     };
 
     try {
-      // Save to Database
+      // Save to Database first (as Pending)
       await createOrder(orderData);
-      
+
+      // Save order locally so it's available when returning from Paymob
       setLastOrder(orderData);
       localStorage.setItem('ss-last-order', JSON.stringify(orderData));
+
+      // If Paymob is selected, get iframe URL
+      if (paymentMethod === 'Paymob') {
+        const payRes = await axios.post('http://localhost:5000/api/paymob/pay', {
+          amount: finalTotal,
+          customer: { ...checkoutData, governorate },
+          invoiceId: orderData.id
+        });
+        
+        if (payRes.data.iframeUrl) {
+          window.location.href = payRes.data.iframeUrl;
+          return;
+        }
+      }
+      
       setCart([]);
       setCurrentPage('order-success');
     } catch (err) {

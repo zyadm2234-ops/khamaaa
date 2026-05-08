@@ -47,7 +47,7 @@ export const products = [
   {
     id: 3,
     name: 'Gym Fit T-Shirt',
-    price: 420,
+    price: 1,
     rating: '4.7',
     category: 'Sport / Gym',
     image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1200&auto=format&fit=crop'
@@ -63,7 +63,7 @@ export const products = [
 ];
 
 export const shippingPrices = {
-  Cairo: 60,
+  Cairo: 4,
   Giza: 70,
   Alexandria: 80,
   Dakahlia: 90,

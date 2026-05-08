@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 
 const orderSchema = new mongoose.Schema({
   invoiceId: { type: String, required: true, unique: true },
+  paymobOrderId: { type: String },
   customer: {
     fullName: String,
     phone: String,
@@ -27,6 +28,7 @@ const orderSchema = new mongoose.Schema({
   estimatedDelivery: String,
   trackingSteps: [String],
   currentStep: { type: Number, default: 0 },
+  status: { type: String, default: 'Pending' },
   createdAt: { type: String, default: () => new Date().toLocaleString() }
 }, { timestamps: true });
 

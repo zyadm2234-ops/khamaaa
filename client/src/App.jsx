@@ -20,6 +20,21 @@ function App() {
     const savedOrder = localStorage.getItem('ss-last-order');
     if (savedCart) setCart(JSON.parse(savedCart));
     if (savedOrder) setLastOrder(JSON.parse(savedOrder));
+
+    // Handle Paymob redirection
+    const urlParams = new URLSearchParams(window.location.search);
+    const paymentStatus = urlParams.get('payment');
+    if (paymentStatus === 'success') {
+      setCurrentPage('order-success');
+      setCart([]);
+      localStorage.removeItem('ss-cart');
+      // Clear URL parameters
+      window.history.replaceState({}, document.title, "/");
+    } else if (paymentStatus === 'failed') {
+      alert('Payment failed. Please try again.');
+      setCurrentPage('cart');
+      window.history.replaceState({}, document.title, "/");
+    }
   }, []);
 
   // Save to local storage
